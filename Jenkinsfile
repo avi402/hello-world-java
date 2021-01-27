@@ -12,6 +12,21 @@ pipeline {
          sh 'mvn install'
             }
         }
+        stage ('Deploy Artifacts') {
+
+      
+    def server = Artifactory.server 'art' 
+        def uploadSpec = """{
+        "files": [
+            {
+                "pattern": "/var/lib/jenkins/workspace/pipeline/target/*.jar",
+                "target": "naz-repo/"
+            }
+        ]
+    }"""
+    server.upload(uploadSpec)
+   }
+}
 
         stage ('Bulding docker docker image') {
             steps {
